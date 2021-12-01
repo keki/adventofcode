@@ -1,18 +1,15 @@
 f = open("input", "r")
 input = map(lambda i: int(i), f.readlines())
 
+triplets = zip(input, input[1:], input[2:])
 
+prev = 0
 count = 0
 
-prev1 = input.pop(0)
-prev2 = input.pop(0)
-prevSum = prev1 + prev2 + input[0]
-for i in input:
-	sum = prev1 + prev2 + i
-	if (sum > prevSum):
+for (a, b, c) in triplets:
+	sum = a + b + c
+	if (prev and sum > prev):
 		count += 1
-	prev1 = prev2
-	prev2 = i
-	prevSum = sum
+	prev = sum
 
-print(count)
+print count
