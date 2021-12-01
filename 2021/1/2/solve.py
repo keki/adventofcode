@@ -11,9 +11,6 @@ for i in input:
 	sum = prev1 + prev2 + i
 	if (sum > prevSum):
 		count += 1
-		print("!")
-	else:
-		print(".")
 	prev1 = prev2
 	prev2 = i
 	prevSum = sum
