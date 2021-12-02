@@ -1,6 +1,6 @@
 import numpy as np
 
-def dirConv(d):
+def readDirection(d):
 	if (d == b'forward'):
 		return 1
 	elif (d == b'up'):
@@ -8,10 +8,15 @@ def dirConv(d):
 	elif (d == b'down'):
 		return 0 + 1j
 
-input = np.loadtxt('input', dtype=object, converters = {0: dirConv, 1: int })
+def readAmount(i):
+	return complex(int(i),0)
 
-asComplex = np.apply_along_axis(lambda a: a[0] * complex(a[1],0), 1, input)
+input = np.loadtxt('input', dtype=object, converters = {0: readDirection, 1: readAmount})
 
-sum = np.sum(asComplex)
+#multiply direction and amount for each step
+prod = np.prod(input, 1)
+
+#sum steps
+sum = np.sum(prod)
 
 print(int(sum.real * sum.imag))
