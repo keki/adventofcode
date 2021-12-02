@@ -19,8 +19,12 @@ aim = 0
 def take_step(row):
 	global aim
 	step = row[0] * row[1]
+	#step.imag will be zero for forward movements, non-zero for up/down
 	aim += step.imag
-	return complex(step.real, step.real * aim)
+	# move based on real part and aim
+	# won't move if real part is zero (up/down command)
+	movement = complex(step.real, step.real * aim)
+	return movement
 
 sum = np.sum(np.apply_along_axis(take_step, 1, input))
 
