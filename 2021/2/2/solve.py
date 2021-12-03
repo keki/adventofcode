@@ -12,13 +12,13 @@ def readDirection(d):
 def readAmount(i):
 	return complex(int(i),0)
 
-input = np.loadtxt('input', dtype=object, converters = {0: readDirection, 1: readAmount})
+input = np.loadtxt('input', dtype=object, converters = {0: readDirection, 1: readAmount}).prod(axis=1, keepdims=True)
 
 aim = 0
 
 def take_step(row):
 	global aim
-	step = row[0] * row[1]
+	step = row[0]
 	#step.imag will be zero for forward movements, non-zero for up/down
 	aim += step.imag
 	# move based on real part and aim
