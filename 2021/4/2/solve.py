@@ -19,7 +19,7 @@ def rounds_to_bingo(sheet):
 	# check each sheet
 	for round in range(1, len(numbers)):
 		for row_or_col in range(0, sheet_size):
-			if(bingo(sheets[sheet, row_or_col], numbers[:round]) or bingo(sheets[sheet, :, row_or_col], numbers[:round])):
+			if (bingo(sheets[sheet, row_or_col], numbers[:round]) or bingo(sheets[sheet, :, row_or_col], numbers[:round])):
 				return round
 
 # calculate winning round for each sheet
