@@ -17,10 +17,10 @@ def bingo(arr1, arr2):
 
 def rounds_to_bingo(sheet):
 	# check each sheet
-	for i in range(1, len(numbers)):
+	for round in range(1, len(numbers)):
 		for row_or_col in range(0, sheet_size):
-			if(bingo(sheets[sheet, row_or_col], numbers[:i]) or bingo(sheets[sheet, :, row_or_col], numbers[:i])):
-				return i
+			if(bingo(sheets[sheet, row_or_col], numbers[:round]) or bingo(sheets[sheet, :, row_or_col], numbers[:round])):
+				return round
 
 # calculate winning round for each sheet
 winning_rounds_by_sheet = [rounds_to_bingo(s) for s in range(0, num_of_sheets)]
