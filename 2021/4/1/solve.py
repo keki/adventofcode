@@ -23,13 +23,13 @@ def run_bingo():
 
 # winner found, calculate result
 (sheet, called_numbers) = run_bingo()
-
+last_call = called_numbers[-1]
 unmarked_on_sheet = set(sheet.flatten()) - set(called_numbers)
 unmarked_sum = sum(unmarked_on_sheet)
 
 print("sheet:", sheet)
-print("last called number:", called_numbers[-1])
+print("last called number:", last_call)
 print("unmarked:", unmarked_on_sheet, " - sum:", unmarked_sum)
 
-print("result:", unmarked_sum * called_numbers[-1])
+print("result:", unmarked_sum * last_call)
 
