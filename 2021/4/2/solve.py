@@ -11,64 +11,35 @@ num_of_sheets = int(sheets_tmp.shape[0] / sheet_size)
 
 sheets = sheets_tmp.reshape(num_of_sheets, sheet_size, sheet_size)
 
-# check if all elements of a given array is in the numbers
-def bingo(arr, n):
-	return not(set(arr) - set(n))
+# check if all elements of arr1 is in arr2
+def bingo(arr1, arr2):
+	return not(set(arr1) - set(arr2))
 
-def find_bingo(sheet):
-
+def rounds_to_bingo(sheet):
 	# check each sheet
 	for i in range(1, len(numbers)):
-		called_numbers = numbers[:i]
-
-		# check rows
-		for row in range(0, sheet_size):
-			r = sheet[row]
-			if(bingo(r, called_numbers)):
-				print("row:", r)
+		for row_or_col in range(0, sheet_size):
+			if(bingo(sheets[sheet, row_or_col], numbers[:i]) or bingo(sheets[sheet, :, row_or_col], numbers[:i])):
 				return i
-
-		#check columns
-		for col in range(0, sheet_size):
-			c = sheet[:, col]
-			if(bingo(c, called_numbers)):
-				print("column:", c)
-				return i
-
-		#check diagonals
-		d1 = np.diagonal(sheet)
-		if(bingo(d1, called_numbers)):
-				print("diagonal:", d1)
-				return i
-		d2 = np.flipud(sheet).diagonal()
-		if(bingo(d2, called_numbers)):
-				print("diagonal:", d2)
-				return i
-
-	# this sheet never wins
-	return len(numbers)
-
-def run_bingo():
-	sheet_results = [find_bingo(sheets[i]) for i in range(0, num_of_sheets)]
-	return sheet_results
 
 # calculate winning round for each sheet
-winning_round_by_sheet = run_bingo()
+winning_rounds_by_sheet = [rounds_to_bingo(s) for s in range(0, num_of_sheets)]
 
 # pick last-to-win sheet
-last_round = max(winning_round_by_sheet)
-last_sheet_id = winning_round_by_sheet.index(last_round)
+last_round = max(winning_rounds_by_sheet)
+last_sheet_id = winning_rounds_by_sheet.index(last_round)
 sheet = sheets[last_sheet_id]
 
 # calculate remaining numbers
-called_nums = numbers[:last_round]
-sheet_sum = np.sum(sheet)
+called_numbers = numbers[:last_round]
+last_call = called_numbers[-1]
 
-unmarked_on_sheet = set(sheet.flatten())-set(called_nums)
+unmarked_on_sheet = set(sheet.flatten())-set(called_numbers)
 unmarked_sum = sum(unmarked_on_sheet)
 
-print("sheet:", sheet, " - sum: ", sheet_sum)
-print("last:", called_nums[-1])
+print("sheet:", sheet)
+print("last:", last_call)
 print("unmarked:", unmarked_on_sheet, " - sum:", unmarked_sum)
-print("result:", unmarked_sum * called_nums[-1])
+
+print("result:", unmarked_sum * last_call)
 
