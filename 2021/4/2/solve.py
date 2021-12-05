@@ -1,8 +1,5 @@
 import numpy as np
 
-import math
-import numpy as np
-
 numbers = np.loadtxt('input', dtype=int, delimiter=',', max_rows=1)
 sheets_tmp = np.loadtxt('input', dtype=int, skiprows=2)
 
