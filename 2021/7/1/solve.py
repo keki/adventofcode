@@ -1,4 +1,3 @@
-import math
 import numpy as np
 
 positions = np.loadtxt('testinput', dtype=int, delimiter=',')
