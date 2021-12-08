@@ -18,6 +18,8 @@ digits_as_segments = [
 
 letters = ['a','b','c','d','e','f','g']
 all_encodings = list(itertools.permutations(letters,7))
+output_sum = 0
+
 
 def as_bool_array(code, encoding):
 	decoded_segments = [encoding.index(char) for char in code]
@@ -41,14 +43,12 @@ def decode(code, encoding):
 	digits_as_array = str(digits_as_segments.index(as_bool_array(code, encoding)))
 	return digits_as_array
 
-summa = 0
-
 for codes in data:
 	encoding = find_encoding(codes)
 	outputs = codes[11:]
 	decoded_output_as_array = [decode(code, encoding) for code in outputs]
 	decoded_output = int("".join(decoded_output_as_array))
-	summa += decoded_output
+	output_sum += decoded_output
 	print("DECODED:  ", decoded_output)
 
-print ("SUM OF OUTPUTS: ", summa)
+print ("SUM OF OUTPUTS: ", output_sum)
