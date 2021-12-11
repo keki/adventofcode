@@ -21,30 +21,33 @@ def flash(dumbos, flash_counter, zeromask):
 				flashed = True
 				dumbos[x-1:x+2,y-1:y+2] += 1
 				dumbos[x,y] = 0
-				zeroframe[x,y] = 0
-	return (flashed, flash_counter, zeromask)
+				zeromask[x,y] = 0
+	return (flashed, flash_counter)
 
 data = read_input()
 
 # add frame of zeroes around input data
 dumbos = np.pad(data, pad_width=1, mode='constant', constant_values=0)
 
+
 flash_counter = 0
 for i in range(0,100):
+
 	# create 0/1 mask for frame and future flashed positions
-	zeroframe = np.pad(np.ones(data.shape, dtype=int), pad_width=1, mode='constant', constant_values=0)
+	zeromask = np.pad(np.ones(data.shape, dtype=int), pad_width=1, mode='constant', constant_values=0)
 
 	# increase energy by one, don't worry about frame yet,
 	print("TICK #", i)
 	dumbos += 1
+
 	# clear frame, those should always be zero after each step
 	# this is unnecessary as frame will never get to 9 but let's keep it clean
-	dumbos *= zeroframe
+	dumbos *= zeromask
 
 	#start flashing, maintain counter and mask of zeroes for flashed items
-	(flashed, flash_counter, zeromask) = flash(dumbos, flash_counter, zeroframe)
-	while(flashed):
-		(flashed, flash_counter, zeromask) = flash(dumbos, flash_counter, zeromask)
+	(flashed, flash_counter) = flash(dumbos, flash_counter, zeromask)
+	while (flashed):
+		(flashed, flash_counter) = flash(dumbos, flash_counter, zeromask)
 
 	# clear frame and flashed positions
 	dumbos *= zeromask
