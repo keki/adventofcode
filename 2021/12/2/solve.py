@@ -45,16 +45,15 @@ while(has_more):
 	new_paths = []
 	for path in paths:
 		last_step = path[-1]
-		remaining_map = valid_steps(cave_map, path[:-1])
 		if (last_step == "end"):
 			new_paths += [path]
 		else:
+			# should store calculated next steps with paths to speed this up, but it's a nice Sunday outside, bye
+			remaining_map = valid_steps(cave_map, path[:-1])
 			next_steps = connections(last_step, remaining_map)
 			if (next_steps):
 				has_more = True
 				new_paths += [path + [step] for step in next_steps]
-			else:
-				new_paths += [path]
 	system('clear')
 	print(len(new_paths))
 	for path in new_paths[-50:]:
