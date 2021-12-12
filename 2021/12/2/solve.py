@@ -38,32 +38,25 @@ def valid_steps(cave_map, path):
 def keep_good_paths(paths):
 	return [path for path in paths if path[-1] == "end"]
 
-paths = [["start"]]
-has_more = True
-while(has_more):
-	has_more = False
-	new_paths = []
-	for path in paths:
-		last_step = path[-1]
-		if (last_step == "end"):
-			new_paths += [path]
-		else:
-			# should store calculated next steps with paths to speed this up, but it's a nice Sunday outside, bye
-			remaining_map = valid_steps(cave_map, path[:-1])
-			next_steps = connections(last_step, remaining_map)
-			if (next_steps):
-				has_more = True
-				new_paths += [path + [step] for step in next_steps]
+def print_update(new_paths):
 	system('clear')
 	print(len(new_paths))
 	for path in new_paths[-50:]:
 		print(path)
+
+paths = [["start"]]
+done_paths = []
+while(paths):
+	new_paths = []
+	for path in paths:
+		# should store calculated next steps with paths to speed this up, but it's a nice Sunday outside, bye
+		for ns in connections(path[-1], valid_steps(cave_map, path[:-1])):
+			if (ns == "end"):
+				done_paths.append(path + [ns])
+			else:
+				new_paths.append(path + [ns])
+	print_update(new_paths)
 	paths = new_paths
 
-good_paths = keep_good_paths(paths)
-
-for path in good_paths:
-	print(path)
-
-print(len(good_paths))
+print("NUMBER OF PATHS: ", len(done_paths))
 
