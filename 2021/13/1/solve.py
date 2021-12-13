@@ -26,7 +26,7 @@ def display(data):
         disp[point[0],point[1]] = '#'
         cnt[point[0],point[1]] = 1
     for row in disp:
-        print(''.join(list(row)))
+        print(''.join(list(row)[::-1]))
     return np.sum(cnt)
 
 def foldAt(data, direction, at):
