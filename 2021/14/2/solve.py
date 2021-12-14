@@ -40,8 +40,6 @@ for round in range(0,40):
             add_to_arr(new_chunk_stats, chunk_right, count)
     chunk_stats = new_chunk_stats
 
-print(chunk_stats)
-
 # char stats from chunk stats
 char_stats = {}
 for chunk in chunk_stats:
