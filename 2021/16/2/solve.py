@@ -27,31 +27,25 @@ def pop_bit():
     bits = bits[1:]
     return res
 
-def parse_literal(pad = True):
+def parse_literal():
     read_more = True
-    bits_arr = []
-    bits_read = 6 # already read 6 bits of headers
+    bits_read = []
     while (read_more):
         read_more = pop_bit() # get just one bit
-        bits_arr += pop_bits(4)
-        bits_read += 5
-    if (pad):
-        # header length + some number of 5-bit chunks
-        if (bits_read % 4 != 0):
-            ignore_bits = 4 - (bits_read % 4)
-            pop_bits(ignore_bits)
-    return to_int(bits_arr)
+        bits_read += pop_bits(4)
+    return to_int(bits_read)
 
 type_id_to_str = ['sum', 'prod', 'min', 'max', 'value', 'gt', 'lt', 'eq']
 
-def parse_packet(pad = True):
+def parse_packet():
     # parse header
-    packet = {}
-    packet['version'] = to_int(pop_bits(3))
-    packet['type'] = type_id_to_str[to_int(pop_bits(3))]
+    packet = {
+        'version': to_int(pop_bits(3)),
+        'type': type_id_to_str[to_int(pop_bits(3))]
+    }
     # parse rest depending on typeID
     if (packet['type'] == 'value'):
-        packet['value'] = parse_literal(pad)
+        packet['value'] = parse_literal()
     else:
         packet['subpackets'] = []
         length_type_id = pop_bit()
@@ -59,18 +53,18 @@ def parse_packet(pad = True):
             value_length = to_int(pop_bits(15))
             bits_target_length = len(bits) - value_length
             while (bits_target_length < len(bits)):
-                packet['subpackets'].append(parse_packet(pad = False))
+                packet['subpackets'].append(parse_packet())
         else:
             subpacket_count = to_int(pop_bits(11))
             for i in range(0,subpacket_count):
-                packet['subpackets'].append(parse_packet(pad = False))
+                packet['subpackets'].append(parse_packet())
 
     return packet
 
-def subpacket_values(packet):
-    return [value(subpacket) for subpacket in packet['subpackets']]
-
 def value(packet):
+    def subpacket_values(packet):
+        return [value(subpacket) for subpacket in packet['subpackets']]
+
     if (packet['type'] == 'sum'):
         summa = 0
         for v in subpacket_values(packet):
@@ -103,10 +97,11 @@ def value(packet):
         else:
             return 0
 
-def subpacket_strings(packet):
-    return [asString(subpacket) for subpacket in packet['subpackets']]
 
 def asString(packet):
+    def subpacket_strings(packet):
+        return [asString(subpacket) for subpacket in packet['subpackets']]
+
     if (packet['type'] == 'sum'):
         summa = []
         for v in subpacket_strings(packet):
