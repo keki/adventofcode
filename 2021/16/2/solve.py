@@ -28,21 +28,19 @@ def pop_bit():
     return res
 
 def parse_literal(pad = True):
-    global bits
-    done = True
-    res_arr = []
-    group_count = 0
-    while (done):
-        done = pop_bit() # get just one bit
-        res_arr += pop_bits(4)
-        group_count += 1
-    value_length = group_count * 5
+    read_more = True
+    bits_arr = []
+    bits_read = 6 # already read 6 bits of headers
+    while (read_more):
+        read_more = pop_bit() # get just one bit
+        bits_arr += pop_bits(4)
+        bits_read += 5
     if (pad):
-        mod4 = ((6 + value_length) % 4) # header is 6 bits
-        if (mod4 != 0):
-            ignore_bits = 4 - mod4
-            bits = bits[ignore_bits:]
-    return to_int(res_arr)
+        # header length + some number of 5-bit chunks
+        if (bits_read % 4 != 0):
+            ignore_bits = 4 - (bits_read % 4)
+            pop_bits(ignore_bits)
+    return to_int(bits_arr)
 
 type_id_to_str = ['sum', 'prod', 'min', 'max', 'value', 'gt', 'lt', 'eq']
 
@@ -134,5 +132,4 @@ def asString(packet):
 
 bits = as_bits(read_input())
 code = parse_packet()
-#print(code)
 print(asString(code), ' === ', value(code))
