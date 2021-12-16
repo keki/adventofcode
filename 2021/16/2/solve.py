@@ -50,11 +50,13 @@ def parse_packet():
         packet['subpackets'] = []
         length_type_id = pop_bit()
         if (length_type_id == 0):
-            value_length = to_int(pop_bits(15))
-            bits_target_length = len(bits) - value_length
+            # length shows number of bits to read in a 15 bit number
+            bits_to_read = to_int(pop_bits(15))
+            bits_target_length = len(bits) - bits_to_read
             while (bits_target_length < len(bits)):
                 packet['subpackets'].append(parse_packet())
         else:
+            # length shows number of subpackets to read in a 11 bit number
             subpacket_count = to_int(pop_bits(11))
             for i in range(0,subpacket_count):
                 packet['subpackets'].append(parse_packet())
