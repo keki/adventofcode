@@ -12,18 +12,15 @@ def read_input():
 
 def as_array(row):
     arr = []
-    while(len(row) > 0):
-        char = row.pop(0)
+    for char in row:
         if (char == '[' or char == ']' or char == ','):
             arr.append(char)
         else:
-            #this will be just a number
-            i = 0
-            while (char != ',' and char != ']'):
-                i = i * 10 + int(char)
-                char = row.pop(0)
-            arr.append(i)
-            arr.append(char)
+            if (isinstance(arr[-1], int)):
+                # already read the first digits of this number
+                arr[-1] = arr[-1] * 10 + int(char)
+            else:
+                arr.append(int(char))
     return arr
 
 def as_obj(arr):
@@ -42,13 +39,13 @@ def as_obj(arr):
 
 def find_explosion_index(arr):
     lvl = 0
-    for i in range(0, len(arr)):
-        if (arr[i] == '['):
+    for i, v in enumerate(arr):
+        if (v == '['):
             if (lvl == 4):
                 return i
             else:
                 lvl += 1
-        elif (arr[i] == ']'):
+        elif (v == ']'):
             lvl -= 1
 
 def find_last_numeric_before(arr, index):
@@ -62,22 +59,24 @@ def find_first_numeric_after(arr, index):
             return i
 
 def find_close_bracket(arr, open_bracket_index):
-    # items to explode are always just two plain numbers, the first close bracket will be fin
+    # items to explode are always just two plain numbers, the first close bracket will be fine
     for i in range(open_bracket_index, len(arr)):
         if (arr[i] == ']'):
               return i
 
 def explode_at(arr, index):
-    left_numeric_index = find_last_numeric_before(arr, index)
     close_bracket_index = find_close_bracket(arr, index)
-    right_numeric_index = find_first_numeric_after(arr, close_bracket_index)
-    pair_to_explode = arr[index:close_bracket_index+1]
-    left = arr[index + 1]
-    right = arr[index + 3]
+
+    left_value = arr[index + 1]
+    right_value = arr[index + 3]
+
+    left_numeric_index = find_last_numeric_before(arr, index)
     if (left_numeric_index):
-        arr[left_numeric_index] += left
+        arr[left_numeric_index] += left_value
+
+    right_numeric_index = find_first_numeric_after(arr, close_bracket_index)
     if (right_numeric_index):
-        arr[right_numeric_index] += right
+        arr[right_numeric_index] += right_value
 
     return arr[:index] + [0] + arr[close_bracket_index+1:]
 
@@ -144,4 +143,4 @@ for (a,b) in pairs:
     if (m > max_magnitude):
         max_magnitude = m
 
-print("RESULT: ", max_magnitude)
+print(f"RESULT: {max_magnitude}")
